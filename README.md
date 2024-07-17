@@ -19,6 +19,8 @@ The Port Scanner App is a user-friendly tool for scanning open ports on specifie
    ```bash
    python server.py
 
+4. **Open the index.html file on your browser**
+
 ## Dependencies
 - Flask: Lightweight web framework for Python.
 - Flask-CORS: Flask extension for handling Cross-Origin Resource Sharing (CORS).
