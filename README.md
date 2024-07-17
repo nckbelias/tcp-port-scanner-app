@@ -7,7 +7,7 @@ The Port Scanner App is a user-friendly tool for scanning open ports on specifie
 
    ```bash
    git clone https://github.com/nckbelias/tcp-port-scanner-app.git
-   cd port-scanner-web-app
+   cd tcp-port-scanner-app
 
 2. **Install Python dependencies:**
    
