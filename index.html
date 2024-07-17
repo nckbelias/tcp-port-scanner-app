@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Port Scanner</title>
+    <script>
+        async function startScan() {
+            document.getElementById("targets").disabled = true;
+            document.getElementById("ports").disabled = true;
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("loading").style.display = "flex";
+
+            const targets = document.getElementById("targets").value.split(",");
+            const ports = document.getElementById("ports").value;
+
+            try {
+                const response = await fetch("http://localhost:5000/scan", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ targets, ports }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch");
+                }
+
+                const result = await response.json();
+                document.getElementById("results").innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error("Error:", error.message);
+                alert("Failed to fetch results");
+            } finally {
+                document.getElementById("targets").disabled = false;
+                document.getElementById("ports").disabled = false;
+                document.getElementById("startButton").disabled = false;
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("result-div").style.display = "block";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="flex flex-col gap-4">
+        <h1 class="text-2xl">Port Scanner</h1>
+        <div class="flex gap-10 items-center">
+            <div class="flex gap-4 items-center">
+                <label for="targets">Targets (comma separated):</label>
+                <input class="px-5 py-1.5 border-2 dark:border-gray-700 rounded-lg" type="text" id="targets" name="targets">
+            </div>
+            <div class="flex gap-4 items-center">
+                <label for="ports">Number of Ports:</label>
+                <input class="px-5 py-1.5 border-2 dark:border-gray-700 rounded-lg" type="number" id="ports" name="ports">
+            </div>
+            <button class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" id="startButton" onclick="startScan()">Start Scan</button>
+            <img id="loading" src="./loading.svg" alt="loading icon" class="loading-img hidden">
+        </div>
+        <div class="hidden" id="result-div">
+            <h2 class="text-xl mb-2" id="results-title">Results:</h2>
+            <div class="p-4 bg-gray-800 max-h-[80vh] overflow-y-auto">
+                <pre class="text-white" id="results"></pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        padding: 20px;
+    }
+    .loading-img {
+        width: 30px;
+    }
+</style>
